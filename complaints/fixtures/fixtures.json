@@ -1,0 +1,132 @@
+[
+  {
+    "model": "complaints.complaint",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "title": "Internet not working",
+      "description": "The office Wi-Fi has been down for 3 days. Unable to complete work efficiently.",
+      "status": "Pending",
+      "created_at": "2026-03-21T10:00:00Z",
+      "image":"complaint_images/internet_issue.jpg",
+      "video": ""
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "title": "Leaky faucet",
+      "description": "The bathroom faucet is leaking continuously and needs urgent repair.",
+      "status": "In Progress",
+      "created_at": "2026-03-20T14:30:00Z",
+      "image": "",
+      "video": "complaint_videos/leaking_faucets.mp4"
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "title": "Broken projector",
+      "description": "The conference room projector stopped working during a presentation.",
+      "status": "Resolved",
+      "created_at": "2026-03-19T09:15:00Z",
+      "image": "complaint_images/broken_prrojector.jpg",
+      "video": ""
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "title": "Air conditioner not cooling",
+      "description": "AC in room 305 is not cooling properly. Extremely uncomfortable during summer.",
+      "status": "Pending",
+      "created_at": "2026-03-18T11:20:00Z",
+      "image": "",
+      "video": "complaint_videos/broken_ac.mp4"
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "title": "Missing chairs in cafeteria",
+      "description": "Several chairs are missing in the cafeteria. Students cannot sit properly.",
+      "status": "In Progress",
+      "created_at": "2026-03-17T08:50:00Z",
+      "image": "complaint_images/missing_chairs.jpg",
+      "video": ""
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "title": "Lights flickering in lab",
+      "description": "Lab lights flicker intermittently, causing disturbance during experiments.",
+      "status": "Resolved",
+      "created_at": "2026-03-16T16:10:00Z",
+      "image": "",
+      "video": "complaint_videos/flickering_lights.mp4"
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "title": "Broken window in office",
+      "description": "Window glass in office 204 is broken and needs immediate replacement.",
+      "status": "Pending",
+      "created_at": "2026-03-15T13:45:00Z",
+      "image": "complaint_images/broken_windows.jpg",
+      "video": ""
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "title": "Software installation issue",
+      "description": "Unable to install the required software on my system for work purposes.",
+      "status": "In Progress",
+      "created_at": "2026-03-14T10:25:00Z",
+      "image": "",
+      "video": "complaint_videos/software_issue.mp4"
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "title": "No hot water in bathroom",
+      "description": "Hot water is not working in the girls’ bathroom on the first floor.",
+      "status": "Resolved",
+      "created_at": "2026-03-13T09:00:00Z",
+      "image": "complaint_images/broken_heater.jpg",
+      "video": ""
+    }
+  },
+  {
+    "model": "complaints.complaint",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "title": "Parking lot gate stuck",
+      "description": "The parking lot automatic gate is stuck and causing traffic issues.",
+      "status": "Pending",
+      "created_at": "2026-03-12T07:30:00Z",
+      "image": "complaint_images/gate_stuck.jpg",
+      "video": ""
+    }
+  }
+]

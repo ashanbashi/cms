@@ -1,0 +1,161 @@
+/* Global */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0a0f2e, #1b1f3a);
+    color: #e0e7ff;
+    margin: 0;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #facc15;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+    border-radius: 0 0 15px 15px;
+}
+
+.navbar a {
+    color: #fff;
+    margin-left: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.navbar a:hover {
+    color: #fef08a;
+    transform: scale(1.1);
+}
+
+/* Container */
+.container {
+    padding: 40px;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Cards */
+.card {
+    background: linear-gradient(145deg, #1e293b, #111827);
+    padding: 25px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid transparent;
+}
+
+.card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(139,92,246,0.5);
+}
+
+/* Status badges */
+.status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: #fff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.status.Pending {
+    background: linear-gradient(135deg, #f97316, #fcd34d); /* Neon orange-yellow */
+}
+
+.status.In-Progress {
+    background: linear-gradient(135deg, #3b82f6, #06b6d4); /* Neon cyan-blue */
+}
+
+.status.Resolved {
+    background: linear-gradient(135deg, #22c55e, #16a34a); /* Neon green */
+}
+
+/* Media (images/videos) */
+.card img, .card video {
+    width: 100%;
+    border-radius: 15px;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: transform 0.3s, filter 0.3s, box-shadow 0.3s;
+}
+
+.card img:hover, .card video:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+    box-shadow: 0 0 15px rgba(139,92,246,0.8);
+}
+
+/* Lightbox */
+#lightbox {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#lightbox img, #lightbox video {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 20px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+}
+
+/* Buttons */
+button {
+    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+    border: none;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(139,92,246,0.6);
+}
+
+/* Card titles & text */
+.card h3 {
+    margin: 10px 0 5px 0;
+    font-size: 1.2rem;
+}
+
+.card p {
+    font-size: 0.95rem;
+    line-height: 1.5rem;
+    color: #cbd5e1;
+}
+
+/* Floating animation on hover */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
+}
+.card:hover {
+    animation: float 0.6s ease-in-out;
+}
