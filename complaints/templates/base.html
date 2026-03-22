@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ComplaintHub</title>
+    {% load static %}
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar">
         <h2>⚡ ComplaintHub</h2>
         <div class="nav-links">
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% if user.is_superuser or user.is_staff %}
+                    <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                {% else %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
                 <a href="{% url 'add_complaint' %}">New Complaint</a>
                 <a href="{% url 'logout' %}">Logout</a>
             {% else %}
@@ -21,41 +27,52 @@
         </div>
     </nav>
 
+    <!-- Main content -->
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
 
+    <!-- Footer -->
+    <footer style="text-align:center; padding:20px; margin-top:40px; background: linear-gradient(90deg, #f472b6, #fb923c); color:#fff; border-top:2px solid #38bdf8; border-radius:15px 15px 0 0;">
+        <p>© 2026 ComplaintHub. All rights reserved.</p>
+        <p>
+            <a href="{% url 'register' %}" style="color:#fcd34d; text-decoration:none; margin-right:15px;">Register</a> |
+            <a href="{% url 'login' %}" style="color:#fcd34d; text-decoration:none; margin-left:15px;">Login</a>
+        </p>
+    </footer>
+
     <!-- Lightbox container -->
-<div id="lightbox" onclick="closeLightbox(event)">
-    <img id="lightbox-img">
-    <video id="lightbox-video" controls></video>
-</div>
+    <div id="lightbox" onclick="closeLightbox(event)">
+        <img id="lightbox-img">
+        <video id="lightbox-video" controls></video>
+    </div>
 
-<script>
-function openLightbox(type, src) {
-    const lb = document.getElementById('lightbox');
-    const img = document.getElementById('lightbox-img');
-    const vid = document.getElementById('lightbox-video');
-    if(type === 'img') {
-        img.src = src;
-        img.style.display = 'block';
-        vid.style.display = 'none';
-    } else {
-        vid.src = src;
-        vid.style.display = 'block';
-        img.style.display = 'none';
-    }
-    lb.style.display = 'flex';
-}
-
-function closeLightbox(e){
-    if(e.target.id === 'lightbox'){
+    <!-- Lightbox JS -->
+    <script>
+    function openLightbox(type, src) {
         const lb = document.getElementById('lightbox');
-        lb.style.display = 'none';
-        document.getElementById('lightbox-video').pause();
+        const img = document.getElementById('lightbox-img');
+        const vid = document.getElementById('lightbox-video');
+        if(type === 'img') {
+            img.src = src;
+            img.style.display = 'block';
+            vid.style.display = 'none';
+        } else {
+            vid.src = src;
+            vid.style.display = 'block';
+            img.style.display = 'none';
+        }
+        lb.style.display = 'flex';
     }
-}
-</script>
+
+    function closeLightbox(e){
+        if(e.target.id === 'lightbox'){
+            const lb = document.getElementById('lightbox');
+            lb.style.display = 'none';
+            document.getElementById('lightbox-video').pause();
+        }
+    }
+    </script>
 </body>
 </html>

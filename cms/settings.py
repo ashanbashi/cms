@@ -131,3 +131,5 @@ LOGOUT_REDIRECT_URL = 'login'     # after logout, go to login page
 # At the bottom
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGOUT_REDIRECT_URL = 'login'  # Redirect here after logout

@@ -1,19 +1,19 @@
 /* Global */
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0a0f2e, #1b1f3a);
-    color: #e0e7ff;
+    background: linear-gradient(135deg, #1f0536, #2a0a3d); /* Deep purple sunset */
+    color: #fce7f3; /* Soft light pink text */
     margin: 0;
 }
 
 /* Navbar */
 .navbar {
-    background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+    background: linear-gradient(90deg, #f472b6, #fb923c); /* Pink to orange gradient */
     padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid #facc15;
+    border-bottom: 3px solid #38bdf8; /* cyan bottom border */
     box-shadow: 0 5px 20px rgba(0,0,0,0.6);
     border-radius: 0 0 15px 15px;
 }
@@ -27,7 +27,7 @@ body {
 }
 
 .navbar a:hover {
-    color: #fef08a;
+    color: #fcd34d; /* bright yellow on hover */
     transform: scale(1.1);
 }
 
@@ -45,7 +45,7 @@ body {
 
 /* Cards */
 .card {
-    background: linear-gradient(145deg, #1e293b, #111827);
+    background: linear-gradient(145deg, #2a0a3d, #1c0528); /* Dark purple gradient */
     padding: 25px;
     border-radius: 20px;
     position: relative;
@@ -56,7 +56,7 @@ body {
 
 .card:hover {
     transform: scale(1.08);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(139,92,246,0.5);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(251,146,60,0.5); /* Sunset glow */
 }
 
 /* Status badges */
@@ -74,15 +74,15 @@ body {
 }
 
 .status.Pending {
-    background: linear-gradient(135deg, #f97316, #fcd34d); /* Neon orange-yellow */
+    background: linear-gradient(135deg, #fbbf24, #fb923c); /* Yellow-orange */
 }
 
 .status.In-Progress {
-    background: linear-gradient(135deg, #3b82f6, #06b6d4); /* Neon cyan-blue */
+    background: linear-gradient(135deg, #06b6d4, #14b8a6); /* Teal-cyan */
 }
 
 .status.Resolved {
-    background: linear-gradient(135deg, #22c55e, #16a34a); /* Neon green */
+    background: linear-gradient(135deg, #f472b6, #ec4899); /* Pink-magenta */
 }
 
 /* Media (images/videos) */
@@ -97,7 +97,7 @@ body {
 .card img:hover, .card video:hover {
     transform: scale(1.1);
     filter: brightness(1.2);
-    box-shadow: 0 0 15px rgba(139,92,246,0.8);
+    box-shadow: 0 0 15px rgba(251,146,60,0.8); /* Sunset glow */
 }
 
 /* Lightbox */
@@ -112,6 +112,12 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+#lightbox.show {
+    opacity: 1;
 }
 
 #lightbox img, #lightbox video {
@@ -123,7 +129,7 @@ body {
 
 /* Buttons */
 button {
-    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+    background: linear-gradient(135deg, #f472b6, #fb923c); /* Pink-orange gradient */
     border: none;
     padding: 12px 20px;
     color: #fff;
@@ -135,7 +141,7 @@ button {
 
 button:hover {
     transform: scale(1.08);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(139,92,246,0.6);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(251,146,60,0.6);
 }
 
 /* Card titles & text */
@@ -147,7 +153,7 @@ button:hover {
 .card p {
     font-size: 0.95rem;
     line-height: 1.5rem;
-    color: #cbd5e1;
+    color: #fcd5f5; /* soft pink text */
 }
 
 /* Floating animation on hover */
@@ -157,5 +163,130 @@ button:hover {
     100% { transform: translateY(0px); }
 }
 .card:hover {
+    animation: float 0.6s ease-in-out;
+}
+
+/* === AUTH PAGES (Register/Login) === */
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+}
+
+.auth-card {
+    width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #2a0a3d, #1c0528);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    border: 2px solid rgba(251,146,60,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* glowing border */
+.auth-card::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #f472b6, #fb923c, #38bdf8);
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0.6;
+}
+
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #14021f;
+    color: #fff;
+    transition: 0.3s;
+}
+
+input:focus {
+    box-shadow: 0 0 10px #fb923c;
+    transform: scale(1.03);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.auth-footer a {
+    color: #fcd34d;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* hover effect */
+.auth-card:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+/* Error / messages */
+.error {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ff6b6b;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+/* Optional subtitle under heading */
+.auth-card p {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fcd5f5;
+    margin-bottom: 15px;
+}
+
+/* Fix spacing with navbar */
+.auth-container {
+    min-height: calc(100vh - 80px); /* prevents squish under navbar */
+}
+
+/* Highlight current user's complaints */
+.your-highlight-class {
+    border: 2px solid #f472b6;
+    box-shadow: 0 0 20px rgba(251,146,60,0.7);
+    animation: pulse 2s infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(251,146,60,0.5); }
+    50% { box-shadow: 0 0 25px rgba(251,146,60,1); }
+    100% { box-shadow: 0 0 10px rgba(251,146,60,0.5); }
+}
+
+/* Cards hover float + neon glow */
+.card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 25px rgba(251,146,60,0.8);
     animation: float 0.6s ease-in-out;
 }

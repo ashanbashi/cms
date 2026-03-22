@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>My Complaints</h2>
+<h2>All Complaints</h2>
 
 {% if complaints %}
 <div class="grid">
     {% for complaint in complaints %}
-    <div class="card">
+    <div class="card {% if complaint.user == user %}your-highlight-class{% endif %}">
         <h3>{{ complaint.title }}</h3>
         <p>{{ complaint.description|truncatechars:120 }}</p>
+        <p><strong>By:</strong> {{ complaint.user.username }}</p>
 
         {% if complaint.image %}
         <img src="{{ complaint.image.url }}" alt="Complaint Image" onclick="openLightbox('img','{{ complaint.image.url }}')">
         {% endif %}
 
         {% if complaint.video %}
-        <video src="{{ complaint.video.url }}" muted autoplay loop onmouseover="this.play()" onmouseout="this.pause()" onclick="openLightbox('vid','{{ complaint.video.url }}')"></video>
+        <video src="{{ complaint.video.url }}" muted autoplay loop
+               onmouseover="this.play()" onmouseout="this.pause()"
+               onclick="openLightbox('vid','{{ complaint.video.url }}')"></video>
         {% endif %}
 
         <span class="status {{ complaint.status|slugify }}">{{ complaint.status }}</span>

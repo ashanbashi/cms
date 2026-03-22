@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Admin Dashboard 🌟</h2>
+        <p>Welcome, {{ request.user.username }}!</p>
+
+        <h3>All Complaints</h3>
+        {% if complaints %}
+        <div class="grid">
+            {% for complaint in complaints %}
+            <div class="card" onclick="alert('Feature coming soon!')">
+                <h4>{{ complaint.title }}</h4>
+                <p>{{ complaint.description|truncatechars:100 }}</p>
+                <span class="status {{ complaint.status|slugify }}">{{ complaint.status }}</span>
+                <small>By: {{ complaint.user.username }} | {{ complaint.created_at|date:"d M Y H:i" }}</small>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No complaints submitted yet.</p>
+        {% endif %}
+
+    </div>
+
+    
+</div>
+{% endblock %}

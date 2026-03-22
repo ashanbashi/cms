@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Create Account</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
-<p style="text-align:center; margin-top:15px; color:#fbbf24;">
-    Already have an account? <a href="{% url 'login' %}" style="color:#3b82f6;">Login here</a>
-</p>
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>✨ Create Account</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">{{ form.username }}</div>
+            <div class="form-group">{{ form.email }}</div>
+            <div class="form-group">{{ form.password1 }}</div>
+            <div class="form-group">{{ form.password2 }}</div>
+            <button type="submit">🚀 Sign Up</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account?<br>
+            <a href="{% url 'login' %}">Login here</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
