@@ -1,29 +1,144 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load complaint_filters %}
 {% block content %}
+<h2>🌟 Admin Dashboard</h2>
+<p>Welcome, {{ request.user.username }}!</p>
 
-<div class="auth-container">
-    <div class="auth-card">
-        <h2>Admin Dashboard 🌟</h2>
-        <p>Welcome, {{ request.user.username }}!</p>
+<!-- Dashboard Stats -->
+<div class="grid" style="margin-bottom:25px;">
+    <div class="card">
+        <h3>Total Complaints</h3>
+        <p>{{ complaints.count }}</p>
+    </div>
+    <div class="card">
+        <h3>Pending</h3>
+        <p>{{ complaints|filter_status:"Pending"|length }}</p>
+    </div>
+    <div class="card">
+        <h3>In Progress</h3>
+        <p>{{ complaints|filter_status:"In Progress"|length }}</p>
+    </div>
+    <div class="card">
+        <h3>Resolved</h3>
+        <p>{{ complaints|filter_status:"Resolved"|length }}</p>
+    </div>
+</div>
 
-        <h3>All Complaints</h3>
-        {% if complaints %}
-        <div class="grid">
-            {% for complaint in complaints %}
-            <div class="card" onclick="alert('Feature coming soon!')">
-                <h4>{{ complaint.title }}</h4>
-                <p>{{ complaint.description|truncatechars:100 }}</p>
-                <span class="status {{ complaint.status|slugify }}">{{ complaint.status }}</span>
-                <small>By: {{ complaint.user.username }} | {{ complaint.created_at|date:"d M Y H:i" }}</small>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No complaints submitted yet.</p>
+<!-- Filter complaints -->
+<div style="margin-bottom:20px; display:flex; gap:15px; flex-wrap:wrap;">
+    <a href="?status=all"><button>All</button></a>
+    <a href="?status=pending"><button>Pending</button></a>
+    <a href="?status=in-progress"><button>In Progress</button></a>
+    <a href="?status=resolved"><button>Resolved</button></a>
+</div>
+
+<!-- Complaint List -->
+{% if complaints %}
+<div class="grid">
+    {% for complaint in complaints %}
+    <div class="card">
+        <h3>{{ complaint.title }}</h3>
+        <p>{{ complaint.description|truncatechars:120 }}</p>
+
+        {% if complaint.image %}
+        <img src="{{ complaint.image.url }}" alt="Complaint Image" onclick="openLightbox('img','{{ complaint.image.url }}')">
+        {% endif %}
+        {% if complaint.video %}
+        <video src="{{ complaint.video.url }}" muted autoplay loop onmouseover="this.play()" onmouseout="this.pause()" onclick="openLightbox('vid','{{ complaint.video.url }}')"></video>
         {% endif %}
 
-    </div>
+        <span class="status {{ complaint.status|slugify }}">{{ complaint.status }}</span>
+        <small>Submitted by {{ complaint.user.username }} on {{ complaint.created_at|date:"d M Y H:i" }}</small>
 
-    
+        <!-- Status change buttons -->
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button onclick="updateStatus({{ complaint.id }}, 'Pending', this)">Pending</button>
+            <button onclick="updateStatus({{ complaint.id }}, 'In Progress', this)">In Progress</button>
+            <button onclick="updateStatus({{ complaint.id }}, 'Resolved', this)">Resolved</button>
+        </div>
+    </div>
+    {% endfor %}
 </div>
+{% else %}
+<p style="text-align:center; font-size:18px; margin-top:20px; color:#fbbf24;">
+    No complaints yet.
+</p>
+{% endif %}
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox(event)">
+    <img id="lightbox-img">
+    <video id="lightbox-video" controls></video>
+</div>
+<button onclick="deleteComplaint({{ complaint.id }}, this)">🗑 Delete</button>
+<script>
+// CSRF token for AJAX
+const csrftoken = '{{ csrf_token }}';
+
+// Lightbox
+function openLightbox(type, src) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const vid = document.getElementById('lightbox-video');
+    if(type === 'img') { img.src = src; img.style.display = 'block'; vid.style.display = 'none'; }
+    else { vid.src = src; vid.style.display = 'block'; img.style.display = 'none'; }
+    lb.style.display = 'flex';
+}
+function closeLightbox(e){
+    if(e.target.id==='lightbox'){
+        const lb=document.getElementById('lightbox');
+        lb.style.display='none';
+        document.getElementById('lightbox-video').pause();
+    }
+}
+
+// AJAX Status Update
+function updateStatus(id, status, btn){
+    fetch("{% url 'update_status' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": csrftoken
+        },
+        body: `id=${id}&status=${status}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            const card = btn.closest('.card');
+            const statusSpan = card.querySelector('.status');
+            statusSpan.innerText = status;
+            statusSpan.className = 'status ' + status.replace(/\s+/g, '-');
+            // Visual feedback
+            btn.style.background = 'linear-gradient(135deg, #14b8a6, #06b6d4)';
+        } else {
+            alert(data.error || 'Something went wrong.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error updating status.');
+    });
+}
+
+function deleteComplaint(id, btn){
+    if(!confirm("Delete this complaint?")) return;
+
+    fetch("{% url 'delete_complaint' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: `id=${id}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            btn.closest('.card').remove();
+        }
+    });
+}
+</script>
 {% endblock %}

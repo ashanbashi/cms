@@ -20,4 +20,13 @@ urlpatterns = [
 
     # ----------------- ADD COMPLAINT -----------------
     path('add-complaint/', views.add_complaint, name='add_complaint'),
+
+     # AJAX endpoint for status update
+    path('update_status/', views.update_complaint_status, name='update_status'),
+
+
+     # ----------------- BUTTONS -----------------
+    path('like/', views.toggle_like, name='toggle_like'),
+
+    path('delete/', views.delete_complaint, name='delete_complaint'),
 ]

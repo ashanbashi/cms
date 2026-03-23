@@ -1,10 +1,55 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h2>Submit a New Complaint</h2>
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>📝 Submit a New Complaint</h2>
+        <p>Fill in the details and optionally attach an image or video.</p>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Complaint</button>
-</form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">{{ form.title }}</div>
+            <div class="form-group">{{ form.description }}</div>
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">Attach Image (optional)</label>
+                {{ form.image }}
+                <img id="imgPreview" style="display:none; width:100%; margin-top:10px; border-radius:10px;">
+            </div>
+            <div class="form-group">
+                <label for="{{ form.video.id_for_label }}">Attach Video (optional)</label>
+                {{ form.video }}
+                <video id="vidPreview" style="display:none; width:100%; margin-top:10px;" controls></video>
+            </div>
+            <button type="submit">🚀 Submit Complaint</button>
+        </form>
+
+        <div class="auth-footer">
+            <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+const imgPreview = document.getElementById('imgPreview');
+imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    if(file){ imgPreview.src = URL.createObjectURL(file); imgPreview.style.display='block'; } 
+    else { imgPreview.style.display='none'; }
+});
+
+const videoInput = document.getElementById('{{ form.video.id_for_label }}');
+const vidPreview = document.getElementById('vidPreview');
+videoInput.addEventListener('change', () => {
+    const file = videoInput.files[0];
+    if(file){ vidPreview.src = URL.createObjectURL(file); vidPreview.style.display='block'; } 
+    else { vidPreview.style.display='none'; }
+});
+</script>
 {% endblock %}

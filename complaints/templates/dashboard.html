@@ -2,26 +2,43 @@
 {% block content %}
 <h2>All Complaints</h2>
 
+<!-- Sorting -->
+<div style="margin-bottom:20px; display:flex; gap:15px; flex-wrap:wrap;">
+    <a href="?sort=newest"><button>Newest</button></a>
+    <a href="?sort=oldest"><button>Oldest</button></a>
+    <a href="?sort=pending"><button>Pending</button></a>
+    <a href="?sort=in-progress"><button>In Progress</button></a>
+    <a href="?sort=resolved"><button>Resolved</button></a>
+</div>
+
 {% if complaints %}
+<form method="GET" style="margin-bottom:20px;">
+    <input type="text" name="q" placeholder="Search complaints..." value="{{ request.GET.q }}">
+    <button type="submit">🔍 Search</button>
+</form>
 <div class="grid">
     {% for complaint in complaints %}
-    <div class="card {% if complaint.user == user %}your-highlight-class{% endif %}">
+    <div class="card {% if complaint.user == request.user %}your-highlight-class{% endif %}">
         <h3>{{ complaint.title }}</h3>
         <p>{{ complaint.description|truncatechars:120 }}</p>
-        <p><strong>By:</strong> {{ complaint.user.username }}</p>
 
         {% if complaint.image %}
         <img src="{{ complaint.image.url }}" alt="Complaint Image" onclick="openLightbox('img','{{ complaint.image.url }}')">
         {% endif %}
 
         {% if complaint.video %}
-        <video src="{{ complaint.video.url }}" muted autoplay loop
-               onmouseover="this.play()" onmouseout="this.pause()"
-               onclick="openLightbox('vid','{{ complaint.video.url }}')"></video>
+        <video src="{{ complaint.video.url }}" muted autoplay loop onmouseover="this.play()" onmouseout="this.pause()" onclick="openLightbox('vid','{{ complaint.video.url }}')"></video>
         {% endif %}
 
         <span class="status {{ complaint.status|slugify }}">{{ complaint.status }}</span>
-        <small>Submitted: {{ complaint.created_at|date:"d M Y H:i" }}</small>
+        <small>Submitted by {{ complaint.user.username }} on {{ complaint.created_at|date:"d M Y H:i" }}</small>
+
+        <!-- Interactive buttons -->
+        <div style="margin-top:10px;">
+            <button onclick="toggleLike({{ complaint.id }}, this)">
+                ❤️ <span>{{ complaint.likes.count }}</span>
+            </button>
+        </div>
     </div>
     {% endfor %}
 </div>
@@ -30,4 +47,55 @@
     No complaints yet. <a href="{% url 'add_complaint' %}" style="color:#3b82f6; text-decoration:underline;">Submit one now!</a>
 </p>
 {% endif %}
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox(event)">
+    <img id="lightbox-img">
+    <video id="lightbox-video" controls></video>
+</div>
+
+<script>
+// Lightbox
+function openLightbox(type, src) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const vid = document.getElementById('lightbox-video');
+    if(type === 'img') { img.src = src; img.style.display = 'block'; vid.style.display = 'none'; }
+    else { vid.src = src; vid.style.display = 'block'; img.style.display = 'none'; }
+    lb.style.display = 'flex';
+}
+function closeLightbox(e){
+    if(e.target.id==='lightbox'){
+        const lb=document.getElementById('lightbox');
+        lb.style.display='none';
+        document.getElementById('lightbox-video').pause();
+    }
+}
+
+// Dummy Like Function
+function likeComplaint(id, btn){
+    const span = document.getElementById(`likes-${id}`);
+    let count = parseInt(span.innerText);
+    count += 1;
+    span.innerText = count;
+    btn.style.background = 'linear-gradient(135deg, #14b8a6, #06b6d4)'; // Visual feedback
+}
+
+function toggleLike(id, btn){
+    fetch("{% url 'toggle_like' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: `id=${id}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.querySelector('span').innerText = data.count;
+        btn.style.transform = "scale(1.2)";
+        setTimeout(()=>btn.style.transform="scale(1)", 200);
+    });
+}
+</script>
 {% endblock %}

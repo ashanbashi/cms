@@ -6,20 +6,89 @@
     <title>ComplaintHub</title>
     {% load static %}
     <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Small extra styling for dropdown -->
+    <style>
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: #1c0528;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            padding: 10px;
+            min-width: 150px;
+            z-index: 1000;
+        }
+
+        .dropdown a, .dropdown button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px;
+            color: #fff;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown a:hover, .dropdown button:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        .user-menu:hover .dropdown {
+            display: block;
+        }
+    </style>
 </head>
 <body>
+
     <!-- Navbar -->
     <nav class="navbar">
         <h2>⚡ ComplaintHub</h2>
+
         <div class="nav-links">
             {% if user.is_authenticated %}
+
                 {% if user.is_superuser or user.is_staff %}
                     <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
                 {% else %}
                     <a href="{% url 'dashboard' %}">Dashboard</a>
                 {% endif %}
+
                 <a href="{% url 'add_complaint' %}">New Complaint</a>
-                <a href="{% url 'logout' %}">Logout</a>
+
+                <!-- 🔥 USER DROPDOWN -->
+                <div class="user-menu">
+                    <button class="user-btn">
+                        👤 {{ user.username }}
+                    </button>
+
+                    <div class="dropdown">
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">🚪 Logout</button>
+                        </form>
+                    </div>
+                </div>
+
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'register' %}">Register</a>
@@ -37,23 +106,23 @@
     <footer style="text-align:center; padding:20px; margin-top:40px; background: linear-gradient(90deg, #f472b6, #fb923c); color:#fff; border-top:2px solid #38bdf8; border-radius:15px 15px 0 0;">
         <p>© 2026 ComplaintHub. All rights reserved.</p>
         <p>
-            <a href="{% url 'register' %}" style="color:#fcd34d; text-decoration:none; margin-right:15px;">Register</a> |
-            <a href="{% url 'login' %}" style="color:#fcd34d; text-decoration:none; margin-left:15px;">Login</a>
+            <a href="{% url 'register' %}" style="color:#fcd34d;">Register</a> |
+            <a href="{% url 'login' %}" style="color:#fcd34d;">Login</a>
         </p>
     </footer>
 
-    <!-- Lightbox container -->
+    <!-- Lightbox -->
     <div id="lightbox" onclick="closeLightbox(event)">
         <img id="lightbox-img">
         <video id="lightbox-video" controls></video>
     </div>
 
-    <!-- Lightbox JS -->
     <script>
     function openLightbox(type, src) {
         const lb = document.getElementById('lightbox');
         const img = document.getElementById('lightbox-img');
         const vid = document.getElementById('lightbox-video');
+
         if(type === 'img') {
             img.src = src;
             img.style.display = 'block';
@@ -63,16 +132,17 @@
             vid.style.display = 'block';
             img.style.display = 'none';
         }
+
         lb.style.display = 'flex';
     }
 
     function closeLightbox(e){
         if(e.target.id === 'lightbox'){
-            const lb = document.getElementById('lightbox');
-            lb.style.display = 'none';
+            document.getElementById('lightbox').style.display = 'none';
             document.getElementById('lightbox-video').pause();
         }
     }
     </script>
+
 </body>
 </html>

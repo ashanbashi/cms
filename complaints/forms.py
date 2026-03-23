@@ -2,13 +2,14 @@ from django import forms
 from .models import Complaint
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
 
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'image', 'video']
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()

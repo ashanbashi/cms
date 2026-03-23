@@ -4,16 +4,46 @@ from django.contrib.auth import authenticate, login
 from .forms import ComplaintForm, RegisterForm, CustomLoginForm
 from .models import Complaint
 from django.contrib import messages
+from django.http import JsonResponse
+from django.db.models import Q
+
 
 # -------------------------------
 # DASHBOARD
 # -------------------------------
 @login_required
 def dashboard(request):
-    # Show all complaints (current user first)
-    complaints = Complaint.objects.all().order_by('-created_at')
-    return render(request, 'dashboard.html', {'complaints': complaints, 'user': request.user})
+    sort = request.GET.get('sort')
+    query = request.GET.get('q', '').strip()
 
+    # 🔥 Split complaints
+    my_complaints = Complaint.objects.filter(user=request.user)
+    other_complaints = Complaint.objects.exclude(user=request.user)
+
+    # 🔍 APPLY SEARCH TO BOTH
+    if query:
+        my_complaints = my_complaints.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+        other_complaints = other_complaints.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+
+    # Sorting
+    if sort == 'newest':
+        my_complaints = my_complaints.order_by('-created_at')
+        other_complaints = other_complaints.order_by('-created_at')
+    elif sort == 'oldest':
+        my_complaints = my_complaints.order_by('created_at')
+        other_complaints = other_complaints.order_by('created_at')
+    else:
+        my_complaints = my_complaints.order_by('-created_at')
+        other_complaints = other_complaints.order_by('-created_at')
+
+    return render(request, 'dashboard.html', {
+        'my_complaints': my_complaints,
+        'other_complaints': other_complaints,
+    })
 # -------------------------------
 # ADD COMPLAINT
 # -------------------------------
@@ -67,9 +97,63 @@ def login_user(request):
 # ADMIN DASHBOARD
 # -------------------------------
 @login_required
+@login_required
 def admin_dashboard(request):
-    if not (request.user.is_staff or request.user.is_superuser):
-        return redirect('dashboard')  # Block normal users
+    if not request.user.is_staff:
+        messages.error(request, "Access denied 🚫")
+        return redirect('dashboard')
 
-    complaints = Complaint.objects.all().order_by('-created_at')
+    status_filter = request.GET.get('status', 'all')
+    complaints = Complaint.objects.all()
+
+    if status_filter.lower() != 'all':
+        complaints = complaints.filter(status=status_filter.title())
+
     return render(request, 'admin_dashboard.html', {'complaints': complaints})
+
+@login_required
+def update_complaint_status(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+    if request.method == 'POST':
+        complaint_id = request.POST.get('id')
+        new_status = request.POST.get('status')
+        try:
+            complaint = Complaint.objects.get(id=complaint_id)
+            complaint.status = new_status
+            complaint.save()
+            return JsonResponse({'success': True})
+        except Complaint.DoesNotExist:
+            return JsonResponse({'error': 'Complaint not found'}, status=404)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def toggle_like(request):
+    if request.method == "POST":
+        complaint_id = request.POST.get('id')
+        complaint = Complaint.objects.get(id=complaint_id)
+
+        if request.user in complaint.likes.all():
+            complaint.likes.remove(request.user)
+            liked = False
+        else:
+            complaint.likes.add(request.user)
+            liked = True
+
+        return JsonResponse({
+            'liked': liked,
+            'count': complaint.likes.count()
+        })
+    
+
+@login_required
+def delete_complaint(request):
+    if not request.user.is_staff:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+    if request.method == "POST":
+        complaint_id = request.POST.get('id')
+        Complaint.objects.filter(id=complaint_id).delete()
+        return JsonResponse({'success': True})
