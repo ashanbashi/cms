@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load complaint_filters %}
 {% block content %}
 <h2>🌟 Admin Dashboard</h2>
 <p>Welcome, {{ request.user.username }}!</p>
@@ -9,19 +8,19 @@
 <div class="grid" style="margin-bottom:25px;">
     <div class="card">
         <h3>Total Complaints</h3>
-        <p>{{ complaints.count }}</p>
+        <p>{{ counts.total }}</p>
     </div>
     <div class="card">
         <h3>Pending</h3>
-        <p>{{ complaints|filter_status:"Pending"|length }}</p>
+        <p>{{ counts.pending }}</p>
     </div>
     <div class="card">
         <h3>In Progress</h3>
-        <p>{{ complaints|filter_status:"In Progress"|length }}</p>
+        <p>{{ counts.in_progress }}</p>
     </div>
     <div class="card">
         <h3>Resolved</h3>
-        <p>{{ complaints|filter_status:"Resolved"|length }}</p>
+        <p>{{ counts.resolved }}</p>
     </div>
 </div>
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from .forms import ComplaintForm, RegisterForm, CustomLoginForm
 from .models import Complaint
 from django.contrib import messages
@@ -96,7 +96,7 @@ def login_user(request):
 # -------------------------------
 # ADMIN DASHBOARD
 # -------------------------------
-@login_required
+
 @login_required
 def admin_dashboard(request):
     if not request.user.is_staff:
@@ -109,7 +109,19 @@ def admin_dashboard(request):
     if status_filter.lower() != 'all':
         complaints = complaints.filter(status=status_filter.title())
 
-    return render(request, 'admin_dashboard.html', {'complaints': complaints})
+    # Add counts for template stats
+    counts = {
+        'total': complaints.count(),
+        'pending': complaints.filter(status='Pending').count(),
+        'in_progress': complaints.filter(status='In Progress').count(),
+        'resolved': complaints.filter(status='Resolved').count(),
+    }
+
+    return render(request, 'admin_dashboard.html', {
+        'complaints': complaints,
+        'counts': counts
+    })
+# ------------------------------- AJAX -------------------------------
 
 @login_required
 def update_complaint_status(request):

@@ -134,5 +134,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGOUT_REDIRECT_URL = 'login'  # Redirect here after logout
 
-
-AUTH_USER_MODEL = 'complaints.CustomUser'

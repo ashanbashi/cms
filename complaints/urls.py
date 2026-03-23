@@ -24,8 +24,7 @@ urlpatterns = [
      # AJAX endpoint for status update
     path('update_status/', views.update_complaint_status, name='update_status'),
 
-
-     # ----------------- BUTTONS -----------------
+    # ----------------- BUTTONS -----------------
     path('like/', views.toggle_like, name='toggle_like'),
 
     path('delete/', views.delete_complaint, name='delete_complaint'),
